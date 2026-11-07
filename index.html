@@ -1,275 +1,338 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mobile Video Player - PIDOY Full Image Overlay</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @keyframes pulse-slow {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
-    .animate-pulse-slow {
-      animation: pulse-slow 2s infinite ease-in-out;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V1zey - Video Gallery & Player</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
 </head>
-<body class="bg-gray-950 text-white flex items-center justify-center min-h-screen p-2 sm:p-4 font-sans">
+<body class="bg-slate-950 text-white font-sans antialiased min-h-screen flex items-center justify-center p-2">
 
-  <!-- Mobile Frame Container -->
-  <div class="relative w-full max-w-md h-[92vh] bg-black rounded-2xl overflow-hidden border border-gray-800 shadow-2xl flex flex-col">
-    
-    <!-- Top Bar Navigation dengan Logo PIDOY -->
-    <div class="bg-gradient-to-b from-black/90 to-transparent p-3 z-10 flex items-center justify-between absolute top-0 left-0 right-0">
-      <div class="flex items-center gap-2">
-        <span class="text-xl font-extrabold italic -skew-x-12 tracking-wider bg-gradient-to-r from-orange-500 via-red-500 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_4px_rgba(249,115,22,0.4)]">
-          PIDOY
-        </span>
-        <span class="text-[10px] bg-red-600/80 text-white font-bold px-1.5 py-0.5 rounded italic">HD</span>
-      </div>
-      <div class="flex items-center gap-2 text-xs text-gray-400">
-        <span id="sessionCounter" class="bg-gray-800/80 px-2.5 py-1 rounded-full text-orange-400 font-bold border border-orange-500/30">
-          Sesi 0/5
-        </span>
-      </div>
-    </div>
-
-    <!-- Video Area Container -->
-    <div class="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
-      
-      <!-- Video Embed Iframe -->
-      <iframe 
-        id="videyFrame" 
-        src="https://vski.cc/e/zn2x30rexqdp" 
-        class="w-full h-full border-0" 
-        allow="autoplay; encrypted-media; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
-
-      <!-- Custom Initial Play Overlay -->
-      <div id="startOverlay" class="absolute inset-0 bg-black/70 backdrop-blur-sm z-20 flex flex-col items-center justify-center cursor-pointer transition-opacity duration-300">
-        <button id="btnStart" class="w-20 h-20 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-orange-500/40 transition-transform active:scale-95">
-          <i class="fa-solid fa-play text-3xl ml-1"></i>
-        </button>
-        <p class="mt-4 text-sm font-medium text-gray-200">Klik untuk memutar video</p>
-      </div>
-
-      <!-- Shopee Overlay Container (Full Overlay Ad) -->
-      <div id="shopeeOverlay" class="absolute inset-0 z-30 hidden flex-col justify-between bg-black/80 backdrop-blur-xs transition-opacity duration-300 p-3">
+    <!-- KONTAINER UTAMA PERSPEKTIF 3D -->
+    <div class="perspective-1000 w-full max-w-md h-[92vh] max-h-[850px] relative">
         
-        <!-- Top Ad Controls & Real Close (Terpisah di Atas) -->
-        <div class="w-full flex justify-between items-start z-50">
-          <div class="flex items-center gap-1.5 bg-orange-600 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-md">
-            <i class="fa-solid fa-bag-shopping"></i>
-            <span>Shopee Promo</span>
-          </div>
+        <!-- KARTU FLIPPER -->
+        <div id="card-flipper" class="w-full h-full relative transform-style-3d transition-transform duration-700 ease-in-out">
 
-          <div class="flex flex-col items-end gap-2">
-            <!-- Tombol X Transparan (Real Close) -->
-            <button id="btnRealClose" class="w-8 h-8 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center bg-black/50 text-white rounded-full text-xs cursor-pointer border border-white/20 shadow-md">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+            <!-- BAGIAN DEPAN: GALERI VIDEO (6 PER HALAMAN) -->
+            <div class="absolute inset-0 w-full h-full bg-slate-900 border border-slate-800 rounded-2xl flex flex-col justify-between p-4 backface-hidden shadow-2xl">
+                <!-- Header -->
+                <header class="py-2 border-b border-slate-800 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-950 text-base shadow-md">V</div>
+                        <span class="text-lg font-extrabold tracking-wider text-amber-400">V1zey</span>
+                    </div>
+                    <span id="page-indicator" class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-300 border border-slate-700">Hal 1 dari 2</span>
+                </header>
 
-            <!-- Tombol X Palsu (Fake Close) -->
-            <button id="btnFakeClose" class="w-8 h-8 bg-black/70 border border-white/20 text-white rounded-full flex items-center justify-center text-sm shadow-md active:opacity-75">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        </div>
+                <!-- Grid Video -->
+                <main class="my-3 flex-grow overflow-y-auto">
+                    <div id="video-grid" class="grid grid-cols-2 gap-3">
+                        <!-- Dimuat via JS -->
+                    </div>
+                </main>
 
-        <!-- Banner Produk Sebesar Layar Overlay -->
-        <div id="shopeeAdLink" class="my-auto w-full h-[75%] bg-gray-900 rounded-2xl border border-orange-500/50 overflow-hidden shadow-2xl cursor-pointer relative flex flex-col justify-between animate-pulse-slow">
-          
-          <!-- Full Size Image Container -->
-          <div class="relative w-full h-full bg-gray-950 overflow-hidden flex items-center justify-center">
-            <img id="adProductImg" src="" alt="Shopee Product" class="w-full h-full object-contain">
-            
-            <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-extrabold px-2.5 py-1 rounded shadow-md">
-              FLASH SALE SHOPEE
+                <!-- Paginasi -->
+                <footer class="pt-2 border-t border-slate-800 flex justify-between items-center">
+                    <button id="btn-prev" onclick="changePage(-1)" class="px-4 py-2 bg-slate-800 text-xs font-semibold rounded-lg border border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed">Sebelumnya</button>
+                    <button id="btn-next" onclick="changePage(1)" class="px-4 py-2 bg-slate-800 text-xs font-semibold rounded-lg border border-slate-700">Selanjutnya</button>
+                </footer>
             </div>
 
-            <!-- Floating CTA Bar di atas bagian bawah gambar -->
-            <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black via-black/80 to-transparent flex flex-col gap-1.5">
-              <h3 id="adTitle" class="text-xs font-bold text-gray-100 line-clamp-1">
-                --
-              </h3>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] text-gray-400 line-through mr-1" id="adOriginalPrice">Rp 150.000</span>
-                  <span class="text-sm font-extrabold text-orange-500" id="adDiscountPrice">Rp 69.000</span>
+
+            <!-- BAGIAN BELAKANG: PEMUTAR VIDEO (IFRAME / VIDEO PLAYER) -->
+            <div class="absolute inset-0 w-full h-full bg-black rounded-2xl flex flex-col justify-between overflow-hidden backface-hidden rotate-y-180 shadow-2xl border border-slate-800">
+                
+                <!-- Header Pemutar -->
+                <header class="px-4 py-3 bg-gradient-to-b from-black/90 to-transparent flex items-center justify-between z-10">
+                    <div class="flex items-center space-x-2 truncate">
+                        <div class="w-7 h-7 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-950 text-xs flex-shrink-0">V</div>
+                        <span class="text-sm font-bold text-amber-400 flex-shrink-0">V1zey</span>
+                        <span class="text-slate-500 text-xs">|</span>
+                        <span id="player-title" class="text-xs text-slate-300 truncate">Judul Video</span>
+                    </div>
+                </header>
+
+                <!-- Kartu Pemutar Video -->
+                <div class="relative flex-grow flex items-center justify-center bg-zinc-950 overflow-hidden">
+                    <iframe id="main-video-frame" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
+
+                    <!-- Iklan 1: In-Page Push -> Smartlink 1 -->
+                    <div id="ad-push" class="absolute top-3 left-3 right-3 bg-slate-900/95 border border-amber-500/40 text-white p-2.5 rounded-xl shadow-2xl transform -translate-y-28 opacity-0 transition-all duration-500 flex items-center justify-between z-20 backdrop-blur-md">
+                        <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="flex items-center space-x-2.5 flex-grow mr-2">
+                            <div class="w-12 h-10 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 relative border border-slate-700">
+                                <img id="push-img" src="" alt="Promo" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+                                    <span class="text-[10px] text-amber-400">▶</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p id="push-title" class="text-xs font-bold text-amber-400 line-clamp-1">Promo Khusus</p>
+                                <p id="push-desc" class="text-[10px] text-slate-300 line-clamp-1">Klik untuk menonton!</p>
+                            </div>
+                        </a>
+                        <div class="flex items-center space-x-1 flex-shrink-0">
+                            <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">Tonton</a>
+                            <button onclick="closeAdPush(event)" class="text-slate-400 hover:text-white text-xs font-bold p-1.5 ml-1">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- Iklan 2: Pesan Chat (Wanita Cantik) -> Smartlink 2 -->
+                    <div id="ad-chat" class="absolute bottom-4 left-3 right-3 bg-slate-900/95 border border-slate-700 text-white p-3 rounded-xl shadow-2xl transform translate-y-28 opacity-0 transition-all duration-500 flex items-center space-x-3 z-20 backdrop-blur-md">
+                        <a href="https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b" target="_blank" onclick="handleAdClick(2)" class="relative flex-shrink-0">
+                            <img id="chat-avatar" src="" alt="Avatar Wanita" class="w-10 h-10 rounded-full object-cover border-2 border-amber-500">
+                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></span>
+                        </a>
+                        <a href="https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b" target="_blank" onclick="handleAdClick(2)" class="flex-grow">
+                            <p id="chat-sender" class="text-xs font-bold text-indigo-400">Jessica</p>
+                            <p id="chat-message" class="text-[11px] text-slate-300 line-clamp-1">Halo ganteng, tonton video lengkapku yuk...</p>
+                        </a>
+                        <button onclick="closeAdChat(event)" class="text-slate-400 hover:text-white text-xs font-bold p-1">✕</button>
+                    </div>
                 </div>
-                <button class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1.5">
-                  <i class="fa-solid fa-cart-shopping"></i>
-                  <span>Beli di Shopee</span>
-                </button>
-              </div>
+
+                <!-- Bagian Bawah: Tombol Kembali -->
+                <footer class="p-3 bg-slate-950 border-t border-slate-900 z-10">
+                    <button onclick="backToGallery()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold rounded-xl text-xs transition-colors border border-slate-700 shadow-md">
+                        ← Kembali ke Pilihan Video
+                    </button>
+                </footer>
             </div>
-          </div>
 
         </div>
-
-        <!-- Bottom Session Status Bar -->
-        <div class="w-full text-center text-[11px] text-gray-400 bg-black/40 py-1 rounded-full backdrop-blur-xs z-40">
-          Sesi Promo: <span id="overlaySessionText" class="text-orange-400 font-bold">1 / 5</span>
-        </div>
-      </div>
-
     </div>
-  </div>
 
-  <script>
-    // Konfigurasi 5 Produk Overlay
-    const shopeeProducts = [
-      {
-        title: "Promo Spesial Shopee - Produk 1",
-        originalPrice: "Rp 150.000",
-        discountPrice: "Rp 69.000",
-        image: "https://i.ibb.co.com/tw61Mx1r/Screenshot-2026-1106-212834.png",
-        url: "https://s.shopee.co.id/9APzBs2ICW"
-      },
-      {
-        title: "Promo Spesial Shopee - Produk 2",
-        originalPrice: "Rp 199.000",
-        discountPrice: "Rp 85.000",
-        image: "https://i.ibb.co.com/2zVKwWM/Screenshot-2026-1106-212751.png",
-        url: "https://shopee.co.id"
-      },
-      {
-        title: "Promo Spesial Shopee - Produk 3",
-        originalPrice: "Rp 120.000",
-        discountPrice: "Rp 49.000",
-        image: "https://i.ibb.co.com/PsCy67pZ/Screenshot-2026-1106-212530.png",
-        url: "https://s.shopee.co.id/114HStEDfh"
-      },
-      {
-        title: "Promo Spesial Shopee - Produk 4",
-        originalPrice: "Rp 175.000",
-        discountPrice: "Rp 79.000",
-        image: "https://i.ibb.co.com/nM8d4W5K/Screenshot-2026-1106-212450.png",
-        url: "https://shopee.co.id"
-      },
-      {
-        title: "Promo Spesial Shopee - Produk 5",
-        originalPrice: "Rp 210.000",
-        discountPrice: "Rp 99.000",
-        image: "https://i.ibb.co.com/dJj04gFT/sg-11134201-8262p-mj6iu02eeo7524.avif",
-        url: "https://s.shopee.co.id/7fbBPBa9bw"
-      }
-    ];
+    <!-- SCRIPT APLIKASI -->
+    <script>
+        const SMARTLINK_1 = "https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe";
+        const SMARTLINK_2 = "https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b";
 
-    let currentSession = 0;
-    const maxSessions = 5;
-    const cycleIntervalMs = 10000;
-    let cycleTimer = null;
-    let countdownInterval = null;
-    let shopeeQueue = [];
-    let currentProduct = null;
+        // Daftar Video Resmi
+        const videos = [
+            { id: "11106009", title: "Video ID: 11106009", src: "https://vidxxx.vip/s/k7allemk", thumb: "https://picsum.photos/seed/11106009/300/200" },
+            { id: "11106008", title: "Video ID: 11106008", src: "https://vidxxx.vip/s/9pe7au0e", thumb: "https://picsum.photos/seed/11106008/300/200" },
+            { id: "11106006", title: "Video ID: 11106006", src: "https://vidxxx.vip/s/61p1d4ap", thumb: "https://picsum.photos/seed/11106006/300/200" },
+            { id: "11106005", title: "Video ID: 11106005", src: "https://vidxxx.vip/s/13ojawj1", thumb: "https://picsum.photos/seed/11106005/300/200" },
+            { id: "11106004", title: "Video ID: 11106004", src: "https://vidxxx.vip/s/f1dj11a1", thumb: "https://picsum.photos/seed/11106004/300/200" },
+            { id: "11106003", title: "Video ID: 11106003", src: "https://vidxxx.vip/s/30n4j4n3", thumb: "https://picsum.photos/seed/11106003/300/200" },
+            { id: "11106002", title: "Video ID: 11106002", src: "https://vidxxx.vip/s/b9llec6t", thumb: "https://picsum.photos/seed/11106002/300/200" },
+            { id: "11106001", title: "Video ID: 11106001", src: "https://vidxxx.vip/s/5glkzufn", thumb: "https://picsum.photos/seed/11106001/300/200" },
+            { id: "11103001", title: "Video ID: 11103001", src: "https://vidxxx.vip/s/ory448l3", thumb: "https://picsum.photos/seed/11103001/300/200" }
+        ];
 
-    const startOverlay = document.getElementById('startOverlay');
-    const btnStart = document.getElementById('btnStart');
-    const shopeeOverlay = document.getElementById('shopeeOverlay');
-    const btnFakeClose = document.getElementById('btnFakeClose');
-    const btnRealClose = document.getElementById('btnRealClose');
-    const sessionCounter = document.getElementById('sessionCounter');
-    const overlaySessionText = document.getElementById('overlaySessionText');
+        // Foto Wanita Cantik untuk Pesan Chat
+        const femaleAvatars = [
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80"
+        ];
 
-    const adProductImg = document.getElementById('adProductImg');
-    const adTitle = document.getElementById('adTitle');
-    const adOriginalPrice = document.getElementById('adOriginalPrice');
-    const adDiscountPrice = document.getElementById('adDiscountPrice');
-    const shopeeAdLink = document.getElementById('shopeeAdLink');
+        // Variasi Konten 3 Siklus Iklan
+        const adVariations = [
+            {
+                chatSender: "Siska (Online)",
+                chatMsg: "Kamu lagi sendirian ya? Main yuk, klik di sini...",
+                pushTitle: "🔥 HOT Preview Video #1",
+                pushDesc: "Tonton durasi penuh gratis sekarang!"
+            },
+            {
+                chatSender: "Angelica VIP",
+                chatMsg: "Pesan privat: Aku udah kirim video baru khusus buatmu!",
+                pushTitle: "⚡ LIVE Stream Wanita Cantik",
+                pushDesc: "Siaran langsung sedang berlangsung!"
+            },
+            {
+                chatSender: "Dina Kirim Video...",
+                chatMsg: "Kirim video singkat (00:45) - Klik untuk putar",
+                pushTitle: "🎬 Rekomendasi Video Populer",
+                pushDesc: "Klik untuk membuka tautan pemutar HD"
+            }
+        ];
 
-    function initRotaryProducts() {
-      shopeeQueue = [...shopeeProducts];
-      for (let i = shopeeQueue.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shopeeQueue[i], shopeeQueue[j]] = [shopeeQueue[j], shopeeQueue[i]];
-      }
-    }
+        let currentPage = 1;
+        const itemsPerPage = 6;
 
-    function renderProduct(product) {
-      currentProduct = product;
-      adProductImg.src = product.image;
-      adTitle.textContent = product.title;
-      adOriginalPrice.textContent = product.originalPrice;
-      adDiscountPrice.textContent = product.discountPrice;
-    }
+        let adCount = 0;
+        let adReappearTimer = null;
+        let chatAdTimer = null;
+        let firstAdTimeout = null;
+        let isAdVisible = false;
 
-    function triggerShopeeAffiliate() {
-      if (currentProduct && currentProduct.url) {
-        window.open(currentProduct.url, '_blank');
-      }
-    }
+        const cardFlipper = document.getElementById("card-flipper");
+        const videoGrid = document.getElementById("video-grid");
+        const pageIndicator = document.getElementById("page-indicator");
+        const btnPrev = document.getElementById("btn-prev");
+        const btnNext = document.getElementById("btn-next");
+        const mainVideoFrame = document.getElementById("main-video-frame");
+        const playerTitle = document.getElementById("player-title");
+        const adChat = document.getElementById("ad-chat");
+        const adPush = document.getElementById("ad-push");
 
-    function showShopeeOverlay() {
-      if (currentSession >= maxSessions) return;
+        const chatAvatar = document.getElementById("chat-avatar");
+        const chatSender = document.getElementById("chat-sender");
+        const chatMessage = document.getElementById("chat-message");
+        const pushImg = document.getElementById("push-img");
+        const pushTitle = document.getElementById("push-title");
+        const pushDesc = document.getElementById("push-desc");
 
-      currentSession++;
-      sessionCounter.textContent = `Sesi ${currentSession}/${maxSessions}`;
-      overlaySessionText.textContent = `${currentSession} / ${maxSessions}`;
+        function renderGallery() {
+            videoGrid.innerHTML = "";
+            let start = (currentPage - 1) * itemsPerPage;
+            let end = start + itemsPerPage;
+            let paginatedItems = videos.slice(start, end);
 
-      const productIndex = (currentSession - 1) % shopeeQueue.length;
-      renderProduct(shopeeQueue[productIndex]);
+            paginatedItems.forEach(video => {
+                let card = document.createElement("div");
+                card.className = "bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-md cursor-pointer hover:border-amber-500 transition-all";
+                card.onclick = () => onVideoClick(video);
+                card.innerHTML = `
+                    <div class="relative aspect-video bg-slate-800">
+                        <img src="${video.thumb}" alt="${video.title}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/10 transition-colors">
+                            <div class="w-8 h-8 bg-amber-500/90 rounded-full flex items-center justify-center text-slate-950 font-bold text-xs shadow-lg">▶</div>
+                        </div>
+                    </div>
+                    <div class="p-2">
+                        <h2 class="text-[11px] font-semibold text-slate-200">${video.title}</h2>
+                    </div>
+                `;
+                videoGrid.appendChild(card);
+            });
 
-      shopeeOverlay.classList.remove('hidden');
-      shopeeOverlay.classList.add('flex');
-
-      btnRealClose.classList.add('pointer-events-none', 'opacity-0');
-      btnRealClose.classList.remove('pointer-events-auto', 'opacity-100');
-
-      let timeLeft = 5;
-
-      if (countdownInterval) clearInterval(countdownInterval);
-      
-      countdownInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
-          clearInterval(countdownInterval);
-          btnRealClose.classList.remove('pointer-events-none', 'opacity-0');
-          btnRealClose.classList.add('pointer-events-auto', 'opacity-100');
+            let totalPages = Math.ceil(videos.length / itemsPerPage);
+            pageIndicator.innerText = `Hal ${currentPage} dari ${totalPages}`;
+            btnPrev.disabled = currentPage === 1;
+            btnNext.disabled = currentPage === totalPages;
         }
-      }, 1000);
-    }
 
-    function hideShopeeOverlay() {
-      shopeeOverlay.classList.add('hidden');
-      shopeeOverlay.classList.remove('flex');
-      if (countdownInterval) clearInterval(countdownInterval);
-    }
-
-    function startAdCycle() {
-      showShopeeOverlay();
-
-      cycleTimer = setInterval(() => {
-        if (currentSession < maxSessions) {
-          showShopeeOverlay();
-        } else {
-          clearInterval(cycleTimer);
+        function changePage(direction) {
+            let totalPages = Math.ceil(videos.length / itemsPerPage);
+            currentPage += direction;
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            renderGallery();
         }
-      }, cycleIntervalMs);
-    }
 
-    btnStart.addEventListener('click', () => {
-      startOverlay.classList.add('hidden');
-      initRotaryProducts();
-      startAdCycle();
-    });
+        function onVideoClick(video) {
+            window.open(SMARTLINK_1, '_blank');
+            playVideo(video);
+        }
 
-    btnFakeClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      triggerShopeeAffiliate();
-    });
+        function playVideo(video) {
+            playerTitle.innerText = video.title;
+            mainVideoFrame.src = video.src;
+            
+            cardFlipper.classList.add("rotate-y-180");
 
-    btnRealClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      hideShopeeOverlay();
-    });
+            resetAdState();
+            startAdCountdown();
+        }
 
-    shopeeAdLink.addEventListener('click', () => {
-      triggerShopeeAffiliate();
-    });
-  </script>
+        function backToGallery() {
+            mainVideoFrame.src = "";
+            resetAdState();
+            cardFlipper.classList.remove("rotate-y-180");
+        }
+
+        function startAdCountdown() {
+            if (firstAdTimeout) clearTimeout(firstAdTimeout);
+            firstAdTimeout = setTimeout(() => {
+                triggerAdShowSequence();
+            }, 15000); // 15 Detik
+        }
+
+        function triggerAdShowSequence() {
+            if (adCount >= 3 || isAdVisible) return;
+
+            let currentCycle = adCount; 
+            let variation = adVariations[currentCycle];
+
+            chatAvatar.src = femaleAvatars[currentCycle];
+            chatSender.innerText = variation.chatSender;
+            chatMessage.innerText = variation.chatMsg;
+
+            pushImg.src = `https://picsum.photos/seed/push${Date.now() + currentCycle}/120/80`;
+            pushTitle.innerText = variation.pushTitle;
+            pushDesc.innerText = variation.pushDesc;
+
+            adCount++;
+            isAdVisible = true;
+
+            adPush.classList.remove("-translate-y-28", "opacity-0");
+            adPush.classList.add("translate-y-0", "opacity-100");
+
+            chatAdTimer = setTimeout(() => {
+                adChat.classList.remove("translate-y-28", "opacity-0");
+                adChat.classList.add("translate-y-0", "opacity-100");
+            }, 500);
+        }
+
+        function hideAds() {
+            adPush.classList.remove("translate-y-0", "opacity-100");
+            adPush.classList.add("-translate-y-28", "opacity-0");
+
+            adChat.classList.remove("translate-y-0", "opacity-100");
+            adChat.classList.add("translate-y-28", "opacity-0");
+
+            isAdVisible = false;
+        }
+
+        function handleAdClick(adNumber) {
+            // Membuka smartlink cadangan jika diperlukan (karena tag <a> sudah otomatis membuka link target)
+            handleAdDismissal();
+        }
+
+        // Tombol X In-Page Push (Memicu Smartlink 1)
+        function closeAdPush(event) {
+            event.stopPropagation();
+            window.open(SMARTLINK_1, '_blank');
+            handleAdDismissal();
+        }
+
+        // Tombol X Pesan Chat (Memicu Smartlink 2)
+        function closeAdChat(event) {
+            event.stopPropagation();
+            window.open(SMARTLINK_2, '_blank');
+            handleAdDismissal();
+        }
+
+        function handleAdDismissal() {
+            hideAds();
+
+            if (adCount < 3) {
+                if (adReappearTimer) clearTimeout(adReappearTimer);
+                adReappearTimer = setTimeout(() => {
+                    triggerAdShowSequence();
+                }, 3000); // 3 Detik
+            }
+        }
+
+        function resetAdState() {
+            adCount = 0;
+            isAdVisible = false;
+            if (firstAdTimeout) clearTimeout(firstAdTimeout);
+            if (adReappearTimer) clearTimeout(adReappearTimer);
+            if (chatAdTimer) clearTimeout(chatAdTimer);
+            hideAds();
+        }
+
+        renderGallery();
+    </script>
 </body>
 </html>

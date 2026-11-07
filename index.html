@@ -73,41 +73,49 @@
                 <div class="relative flex-grow flex items-center justify-center bg-zinc-950 overflow-hidden">
                     <iframe id="main-video-frame" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
 
-                    <!-- Iklan 1: In-Page Push -> Smartlink 1 -->
-                    <div id="ad-push" class="absolute top-3 left-3 right-3 bg-slate-900/95 border border-amber-500/40 text-white p-2.5 rounded-xl shadow-2xl transform -translate-y-28 opacity-0 transition-all duration-500 flex items-center justify-between z-20 backdrop-blur-md">
-                        <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="flex items-center space-x-2.5 flex-grow mr-2">
-                            <div class="w-12 h-10 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 relative border border-slate-700">
-                                <img id="push-img" src="" alt="Promo" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
-                                    <span class="text-[10px] text-amber-400">▶</span>
-                                </div>
-                            </div>
-                            <div>
-                                <p id="push-title" class="text-xs font-bold text-amber-400 line-clamp-1">Promo Khusus</p>
-                                <p id="push-desc" class="text-[10px] text-slate-300 line-clamp-1">Klik untuk menonton!</p>
-                            </div>
-                        </a>
-                        <div class="flex items-center space-x-1 flex-shrink-0">
-                            <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">Tonton</a>
-                            <button onclick="closeAdPush(event)" class="text-slate-400 hover:text-white text-xs font-bold p-1.5 ml-1">✕</button>
-                        </div>
-                    </div>
-
-                    <!-- Iklan 2: Pesan Chat (Wanita Cantik) -> Smartlink 2 -->
-                    <div id="ad-chat" class="absolute bottom-4 left-3 right-3 bg-slate-900/95 border border-slate-700 text-white p-3 rounded-xl shadow-2xl transform translate-y-28 opacity-0 transition-all duration-500 flex items-center space-x-3 z-20 backdrop-blur-md">
+                    <!-- Iklan 1: Pesan Chat (Di Atas - Ukuran Lebih Besar) -> Smartlink 2 -->
+                    <div id="ad-chat" class="absolute top-3 left-3 right-3 bg-slate-900/95 border border-slate-700 text-white p-3.5 rounded-xl shadow-2xl transform -translate-y-36 opacity-0 transition-all duration-500 flex items-center space-x-3.5 z-20 backdrop-blur-md">
                         <a href="https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b" target="_blank" onclick="handleAdClick(2)" class="relative flex-shrink-0">
-                            <img id="chat-avatar" src="" alt="Avatar Wanita" class="w-10 h-10 rounded-full object-cover border-2 border-amber-500">
-                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></span>
+                            <img id="chat-avatar" src="" alt="Avatar Wanita" class="w-14 h-14 rounded-full object-cover border-2 border-amber-500 shadow-md">
+                            <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-slate-900 rounded-full"></span>
                         </a>
                         <a href="https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b" target="_blank" onclick="handleAdClick(2)" class="flex-grow">
-                            <p id="chat-sender" class="text-xs font-bold text-indigo-400">Jessica</p>
-                            <p id="chat-message" class="text-[11px] text-slate-300 line-clamp-1">Halo ganteng, tonton video lengkapku yuk...</p>
+                            <div class="flex items-center justify-between">
+                                <p id="chat-sender" class="text-xs font-bold text-indigo-400">Jessica</p>
+                                <span class="text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">Pesan Baru</span>
+                            </div>
+                            <p id="chat-message" class="text-xs text-slate-200 mt-1 line-clamp-2">Halo ganteng, tonton video lengkapku yuk...</p>
                         </a>
-                        <button onclick="closeAdChat(event)" class="text-slate-400 hover:text-white text-xs font-bold p-1">✕</button>
+                        <button onclick="closeAdChat(event)" class="text-slate-400 hover:text-white text-sm font-bold p-1 self-start">✕</button>
+                    </div>
+
+                    <!-- Iklan 2: In-Page Push (Di Bawah - Tinggi Hampir Setengah Layar / Memuat Video) -> Smartlink 1 -->
+                    <div id="ad-push" class="absolute bottom-3 left-3 right-3 bg-slate-900/95 border border-amber-500/50 text-white p-3.5 rounded-2xl shadow-2xl transform translate-y-96 opacity-0 transition-all duration-500 flex flex-col justify-between z-20 backdrop-blur-md max-h-[48%]">
+                        <!-- Header Push -->
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-amber-400 text-sm">🔥</span>
+                                <p id="push-title" class="text-xs font-bold text-amber-400 line-clamp-1">Promo Khusus</p>
+                            </div>
+                            <button onclick="closeAdPush(event)" class="text-slate-400 hover:text-white text-sm font-bold px-1.5 py-0.5 bg-slate-800 rounded-full">✕</button>
+                        </div>
+                        
+                        <!-- Media Video Iklan (Hampir Setengah Layar Pemutar) -->
+                        <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="w-full flex-grow bg-black rounded-xl overflow-hidden relative border border-slate-700 min-h-[140px] max-h-[180px] block">
+                            <video id="push-video" autoplay muted loop playsinline class="w-full h-full object-cover"></video>
+                            <div class="absolute inset-0 bg-black/10 flex items-center justify-center">
+                                <span class="bg-amber-500/90 text-slate-950 text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">▶ Ketuk untuk Nonton</span>
+                            </div>
+                        </a>
+
+                        <div class="mt-2 flex items-center justify-between">
+                            <p id="push-desc" class="text-[11px] text-slate-300 line-clamp-1">Tonton video selengkapnya sekarang!</p>
+                            <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-4 py-1.5 rounded-lg transition-colors flex-shrink-0">Buka</a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Bagian Bawah: Tombol Kembali -->
+                <!-- Bagian Bawah: Tombol Kembali (Tidak Memicu Smartlink) -->
                 <footer class="p-3 bg-slate-950 border-t border-slate-900 z-10">
                     <button onclick="backToGallery()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold rounded-xl text-xs transition-colors border border-slate-700 shadow-md">
                         ← Kembali ke Pilihan Video
@@ -123,24 +131,31 @@
         const SMARTLINK_1 = "https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe";
         const SMARTLINK_2 = "https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b";
 
-        // Daftar Video Resmi
+        // Daftar Video Resmi (Menggunakan endpoint /e/)
         const videos = [
-            { id: "11106009", title: "Video ID: 11106009", src: "https://vidxxx.vip/s/k7allemk", thumb: "https://picsum.photos/seed/11106009/300/200" },
-            { id: "11106008", title: "Video ID: 11106008", src: "https://vidxxx.vip/s/9pe7au0e", thumb: "https://picsum.photos/seed/11106008/300/200" },
-            { id: "11106006", title: "Video ID: 11106006", src: "https://vidxxx.vip/s/61p1d4ap", thumb: "https://picsum.photos/seed/11106006/300/200" },
-            { id: "11106005", title: "Video ID: 11106005", src: "https://vidxxx.vip/s/13ojawj1", thumb: "https://picsum.photos/seed/11106005/300/200" },
-            { id: "11106004", title: "Video ID: 11106004", src: "https://vidxxx.vip/s/f1dj11a1", thumb: "https://picsum.photos/seed/11106004/300/200" },
-            { id: "11106003", title: "Video ID: 11106003", src: "https://vidxxx.vip/s/30n4j4n3", thumb: "https://picsum.photos/seed/11106003/300/200" },
-            { id: "11106002", title: "Video ID: 11106002", src: "https://vidxxx.vip/s/b9llec6t", thumb: "https://picsum.photos/seed/11106002/300/200" },
-            { id: "11106001", title: "Video ID: 11106001", src: "https://vidxxx.vip/s/5glkzufn", thumb: "https://picsum.photos/seed/11106001/300/200" },
-            { id: "11103001", title: "Video ID: 11103001", src: "https://vidxxx.vip/s/ory448l3", thumb: "https://picsum.photos/seed/11103001/300/200" }
+            { id: "11106009", title: "Video ID: 11106009", src: "https://vidxxx.vip/e/k7allemk", thumb: "https://picsum.photos/seed/11106009/300/200" },
+            { id: "11106008", title: "Video ID: 11106008", src: "https://vidxxx.vip/e/9pe7au0e", thumb: "https://picsum.photos/seed/11106008/300/200" },
+            { id: "11106006", title: "Video ID: 11106006", src: "https://vidxxx.vip/e/61p1d4ap", thumb: "https://picsum.photos/seed/11106006/300/200" },
+            { id: "11106005", title: "Video ID: 11106005", src: "https://vidxxx.vip/e/13ojawj1", thumb: "https://picsum.photos/seed/11106005/300/200" },
+            { id: "11106004", title: "Video ID: 11106004", src: "https://vidxxx.vip/e/f1dj11a1", thumb: "https://picsum.photos/seed/11106004/300/200" },
+            { id: "11106003", title: "Video ID: 11106003", src: "https://vidxxx.vip/e/30n4j4n3", thumb: "https://picsum.photos/seed/11106003/300/200" },
+            { id: "11106002", title: "Video ID: 11106002", src: "https://vidxxx.vip/e/b9llec6t", thumb: "https://picsum.photos/seed/11106002/300/200" },
+            { id: "11106001", title: "Video ID: 11106001", src: "https://vidxxx.vip/e/5glkzufn", thumb: "https://picsum.photos/seed/11106001/300/200" },
+            { id: "11103001", title: "Video ID: 11103001", src: "https://vidxxx.vip/e/ory448l3", thumb: "https://picsum.photos/seed/11103001/300/200" }
         ];
 
-        // Foto Wanita Cantik untuk Pesan Chat
-        const femaleAvatars = [
-            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80"
+        // 3 Foto Iklan Pesan Chat Sesuai Permintaan
+        const chatAvatars = [
+            "https://i.ibb.co/ks6RHwmS/e58e5f3dbc23f2a42b07b9d7149312ed.jpg",
+            "https://i.ibb.co/ccnPMG52/d3f7c0b676a9dde5db9edaecd74f6c21.jpg",
+            "https://i.ibb.co/twspN4M6/193c6dad2b319045f013e74981d25f54.jpg"
+        ];
+
+        // 3 Video Iklan In-Page Push Sesuai Permintaan (Videy.co)
+        const pushVideos = [
+            "https://videy.co/v/?id=ENOlSaoU1",
+            "https://videy.co/v/?id=EiLWpYZg1",
+            "https://videy.co/v/?id=7aTdoZW71"
         ];
 
         // Variasi Konten 3 Siklus Iklan
@@ -148,20 +163,20 @@
             {
                 chatSender: "Siska (Online)",
                 chatMsg: "Kamu lagi sendirian ya? Main yuk, klik di sini...",
-                pushTitle: "🔥 HOT Preview Video #1",
-                pushDesc: "Tonton durasi penuh gratis sekarang!"
+                pushTitle: "🔥 HOT Preview Video Eksklusif #1",
+                pushDesc: "Tonton durasi penuh kualitas HD gratis sekarang!"
             },
             {
                 chatSender: "Angelica VIP",
                 chatMsg: "Pesan privat: Aku udah kirim video baru khusus buatmu!",
-                pushTitle: "⚡ LIVE Stream Wanita Cantik",
-                pushDesc: "Siaran langsung sedang berlangsung!"
+                pushTitle: "⚡ LIVE Stream Spesial Malam Ini",
+                pushDesc: "Siaran langsung eksklusif sedang berlangsung!"
             },
             {
                 chatSender: "Dina Kirim Video...",
                 chatMsg: "Kirim video singkat (00:45) - Klik untuk putar",
-                pushTitle: "🎬 Rekomendasi Video Populer",
-                pushDesc: "Klik untuk membuka tautan pemutar HD"
+                pushTitle: "🎬 Rekomendasi Video Pilihan Populer",
+                pushDesc: "Klik untuk membuka tautan pemutar video"
             }
         ];
 
@@ -187,7 +202,7 @@
         const chatAvatar = document.getElementById("chat-avatar");
         const chatSender = document.getElementById("chat-sender");
         const chatMessage = document.getElementById("chat-message");
-        const pushImg = document.getElementById("push-img");
+        const pushVideo = document.getElementById("push-video");
         const pushTitle = document.getElementById("push-title");
         const pushDesc = document.getElementById("push-desc");
 
@@ -203,7 +218,7 @@
                 card.onclick = () => onVideoClick(video);
                 card.innerHTML = `
                     <div class="relative aspect-video bg-slate-800">
-                        <img src="${video.thumb}" alt="${video.title}" class="w-full h-full object-cover">
+                        <img src="${video.thumb}" alt="${video.title}" loading="lazy" class="w-full h-full object-cover">
                         <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/10 transition-colors">
                             <div class="w-8 h-8 bg-amber-500/90 rounded-full flex items-center justify-center text-slate-950 font-bold text-xs shadow-lg">▶</div>
                         </div>
@@ -246,6 +261,7 @@
 
         function backToGallery() {
             mainVideoFrame.src = "";
+            pushVideo.src = "";
             resetAdState();
             cardFlipper.classList.remove("rotate-y-180");
         }
@@ -263,38 +279,42 @@
             let currentCycle = adCount; 
             let variation = adVariations[currentCycle];
 
-            chatAvatar.src = femaleAvatars[currentCycle];
+            // Update Pesan Chat
+            chatAvatar.src = chatAvatars[currentCycle];
             chatSender.innerText = variation.chatSender;
             chatMessage.innerText = variation.chatMsg;
 
-            pushImg.src = `https://picsum.photos/seed/push${Date.now() + currentCycle}/120/80`;
+            // Update In-Page Push (Video Iklan)
+            pushVideo.src = pushVideos[currentCycle];
             pushTitle.innerText = variation.pushTitle;
             pushDesc.innerText = variation.pushDesc;
 
             adCount++;
             isAdVisible = true;
 
-            adPush.classList.remove("-translate-y-28", "opacity-0");
-            adPush.classList.add("translate-y-0", "opacity-100");
+            // 1. Munculkan Pesan Chat di Atas
+            adChat.classList.remove("-translate-y-36", "opacity-0");
+            adChat.classList.add("translate-y-0", "opacity-100");
 
+            // 2. Munculkan In-Page Push di Bawah setelah jeda 0,5 detik
             chatAdTimer = setTimeout(() => {
-                adChat.classList.remove("translate-y-28", "opacity-0");
-                adChat.classList.add("translate-y-0", "opacity-100");
+                adPush.classList.remove("translate-y-96", "opacity-0");
+                adPush.classList.add("translate-y-0", "opacity-100");
             }, 500);
         }
 
         function hideAds() {
-            adPush.classList.remove("translate-y-0", "opacity-100");
-            adPush.classList.add("-translate-y-28", "opacity-0");
-
             adChat.classList.remove("translate-y-0", "opacity-100");
-            adChat.classList.add("translate-y-28", "opacity-0");
+            adChat.classList.add("-translate-y-36", "opacity-0");
 
+            adPush.classList.remove("translate-y-0", "opacity-100");
+            adPush.classList.add("translate-y-96", "opacity-0");
+
+            pushVideo.src = "";
             isAdVisible = false;
         }
 
         function handleAdClick(adNumber) {
-            // Membuka smartlink cadangan jika diperlukan (karena tag <a> sudah otomatis membuka link target)
             handleAdDismissal();
         }
 

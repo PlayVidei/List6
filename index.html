@@ -3,356 +3,868 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V1zey - Video Gallery & Player</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Xpidioss - Dashboard Galeri Video</title>
+    <!-- Adsterra Popunder Script (Memicu 1x pengunjung di awal) -->
+    <script data-cfasync="false" src="https://akconstructioncareerdays.org/1/585d14a1088579ccf27a4840dfa44967"></script>
+
     <style>
-        .perspective-1000 {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 480px;
+            height: 760px;
             perspective: 1000px;
         }
-        .transform-style-3d {
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
             transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: 16px;
         }
-        .backface-hidden {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
+
+        .flip-card.flipped {
             transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            background: #1a1a1a;
+        }
+
+        /* --- SISI DEPAN: DASHBOARD XPIDIOSS --- */
+        .card-front {
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 2;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 2px;
+            padding-bottom: 4px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ff5722;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 2px 4px 10px rgba(255, 87, 34, 0.5), 0px 5px 2px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: baseline;
+        }
+
+        .logo-x {
+            font-size: 52px;
+            line-height: 0.7;
+            display: inline-block;
+            transform: translateY(4px);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #222;
+            color: #fff;
+            font-size: 11.5px;
+        }
+
+        .search-box button {
+            background: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .cat-btn {
+            background: #222;
+            color: #bbb;
+            border: 1px solid #333;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 9.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: #ff5722;
+            color: #fff;
+            border-color: #ff5722;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 105px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1.5px solid #333;
+            background: #000;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            border-color: #ff5722;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4px 6px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .badge-cat {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            background: rgba(255, 87, 34, 0.85);
+            font-size: 7.5px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .badge-duration {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 2px 4px;
+            border-radius: 3px;
+            z-index: 2;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .pagination button {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 3px 9px;
+            font-size: 10.5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background: #ff5722;
+            border-color: #ff5722;
+        }
+
+        .native-banners-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .native-banner {
+            display: flex;
+            align-items: center;
+            background: #1e1e1e;
+            border: 1.5px solid #333;
+            border-radius: 10px;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #fff;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .native-banner:hover {
+            border-color: #ff5722;
+            background: #252525;
+        }
+
+        .native-banner img {
+            width: 72px;
+            height: 52px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .native-banner-info {
+            flex-grow: 1;
+        }
+
+        .native-banner-tag {
+            font-size: 9px;
+            color: #ff5722;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .native-banner-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #f0f0f0;
+        }
+
+        /* --- SISI BELAKANG: PEMUTAR VIDEO & ROTATED ADS --- */
+        .card-back {
+            transform: rotateY(180deg);
+            background: #000;
+        }
+
+        .main-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-back-gallery {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 30;
+        }
+
+        /* --- IKLAN 1: Pesan Chat (Smartlink 2) --- */
+        .ad-chat {
+            position: absolute;
+            top: 50px;
+            left: 12px;
+            right: 12px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+            z-index: 10;
+            cursor: pointer;
+        }
+        .ad-chat-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .ad-chat img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        .ad-chat-info {
+            flex-grow: 1;
+            color: #333;
+            font-size: 11px;
+        }
+        .ad-chat-tag {
+            color: #d32f2f;
+            font-size: 9.5px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .ad-chat-reply-btn {
+            background: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(255, 87, 34, 0.4);
+        }
+
+        /* --- IKLAN 2 & 3 (Smartlink 1) --- */
+        .pos-ad2-left { position: absolute; bottom: 20px; left: 12px; width: 175px; height: 280px; }
+        .pos-ad2-right { position: absolute; top: 130px; right: 12px; width: 58%; height: 310px; }
+        .pos-ad3-right { position: absolute; top: 130px; right: 12px; width: 58%; height: 310px; }
+        .pos-ad3-left { position: absolute; bottom: 20px; left: 12px; width: 175px; height: 280px; }
+
+        .ad-box {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            display: none;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            z-index: 10;
+            cursor: pointer;
+        }
+        .ad-box video, .ad-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; /* Supaya klik diteruskan ke container ad-box */
+        }
+
+        .ad-caption-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.92) 20%, transparent);
+            color: #fff;
+            padding: 10px 8px 6px;
+            font-size: 10.5px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.25;
+            pointer-events: none;
+        }
+
+        .shake-animation {
+            animation: shake 0.5s ease-in-out 4;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-6px) rotate(-2deg); }
+            40% { transform: translateX(6px) rotate(2deg); }
+            60% { transform: translateX(-4px) rotate(-1deg); }
+            80% { transform: translateX(4px) rotate(1deg); }
+            100% { transform: translateX(0); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 25;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-white font-sans antialiased min-h-screen flex items-center justify-center p-2">
+<body>
 
-    <!-- KONTAINER UTAMA PERSPEKTIF 3D -->
-    <div class="perspective-1000 w-full max-w-md h-[92vh] max-h-[850px] relative">
-        
-        <!-- KARTU FLIPPER -->
-        <div id="card-flipper" class="w-full h-full relative transform-style-3d transition-transform duration-700 ease-in-out">
+    <div class="card-container">
+        <div class="flip-card" id="flipCard">
+            
+            <!-- SISI DEPAN: DASHBOARD XPIDIOSS -->
+            <div class="card-front">
+                <div class="dashboard-header">
+                    <div class="logo"><span class="logo-x">X</span>pidioss</div>
+                </div>
 
-            <!-- BAGIAN DEPAN: GALERI VIDEO (6 PER HALAMAN) -->
-            <div class="absolute inset-0 w-full h-full bg-slate-900 border border-slate-800 rounded-2xl flex flex-col justify-between p-4 backface-hidden shadow-2xl">
-                <!-- Header -->
-                <header class="py-2 border-b border-slate-800 flex justify-between items-center">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-950 text-base shadow-md">V</div>
-                        <span class="text-lg font-extrabold tracking-wider text-amber-400">V1zey</span>
-                    </div>
-                    <span id="page-indicator" class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-300 border border-slate-700">Hal 1 dari 2</span>
-                </header>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari video viral...">
+                    <button onclick="cariVideo()">Cari</button>
+                </div>
 
-                <!-- Grid Video -->
-                <main class="my-3 flex-grow overflow-y-auto">
-                    <div id="video-grid" class="grid grid-cols-2 gap-3">
-                        <!-- Dimuat via JS -->
-                    </div>
-                </main>
+                <!-- Tombol Kategori -->
+                <div class="category-filters" id="categoryFilters">
+                    <button class="cat-btn active" onclick="filterCategory('All')">Semua</button>
+                    <button class="cat-btn" onclick="filterCategory('Tante')">Tante</button>
+                    <button class="cat-btn" onclick="filterCategory('Selingkuh')">Selingkuh</button>
+                    <button class="cat-btn" onclick="filterCategory('Jilbab')">Jilbab</button>
+                    <button class="cat-btn" onclick="filterCategory('Janda')">Janda</button>
+                    <button class="cat-btn" onclick="filterCategory('Chindo')">Chindo</button>
+                    <button class="cat-btn" onclick="filterCategory('Gadis')">Gadis</button>
+                    <button class="cat-btn" onclick="filterCategory('Abg')">Abg</button>
+                    <button class="cat-btn" onclick="filterCategory('SMA')">SMA</button>
+                </div>
 
+                <div class="video-grid" id="videoGrid"></div>
+                
                 <!-- Paginasi -->
-                <footer class="pt-2 border-t border-slate-800 flex justify-between items-center">
-                    <button id="btn-prev" onclick="changePage(-1)" class="px-4 py-2 bg-slate-800 text-xs font-semibold rounded-lg border border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed">Sebelumnya</button>
-                    <button id="btn-next" onclick="changePage(1)" class="px-4 py-2 bg-slate-800 text-xs font-semibold rounded-lg border border-slate-700">Selanjutnya</button>
-                </footer>
+                <div class="pagination" id="pagination"></div>
+
+                <!-- 2 Native Banner -->
+                <div class="native-banners-container">
+                    <a href="https://playvidei.github.io/List5/" target="_blank" class="native-banner">
+                        <img src="https://i.ibb.co.com/Q3kzf9Qm/9332f9b4ca886285845d8f1532fd2867.jpg" alt="Sponsor 1">
+                        <div class="native-banner-info">
+                            <div class="native-banner-tag">SPONSORED LINK #1</div>
+                            <div class="native-banner-title">🔥 Tonton Update Koleksi Video Full Durasi Terbaru</div>
+                        </div>
+                    </a>
+                    <a href="https://playvidei.github.io/List4/" target="_blank" class="native-banner">
+                        <img src="https://i.ibb.co.com/TMFwcmx0/e500265744873a3f2563824720bde3f0.jpg" alt="Sponsor 2">
+                        <div class="native-banner-info">
+                            <div class="native-banner-tag">SPONSORED LINK #2</div>
+                            <div class="native-banner-title">⭐ Akses Video Viral Tanpa Sensor Kualitas HD</div>
+                        </div>
+                    </a>
+                </div>
             </div>
 
-
-            <!-- BAGIAN BELAKANG: PEMUTAR VIDEO (IFRAME / VIDEO PLAYER) -->
-            <div class="absolute inset-0 w-full h-full bg-black rounded-2xl flex flex-col justify-between overflow-hidden backface-hidden rotate-y-180 shadow-2xl border border-slate-800">
+            <!-- SISI BELAKANG: PEMUTAR VIDEO & ROTATED ADS -->
+            <div class="card-back">
+                <button class="btn-back-gallery" onclick="kembaliKeGaleri()">← Galeri</button>
                 
-                <!-- Header Pemutar -->
-                <header class="px-4 py-3 bg-gradient-to-b from-black/90 to-transparent flex items-center justify-between z-10">
-                    <div class="flex items-center space-x-2 truncate">
-                        <div class="w-7 h-7 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-950 text-xs flex-shrink-0">V</div>
-                        <span class="text-sm font-bold text-amber-400 flex-shrink-0">V1zey</span>
-                        <span class="text-slate-500 text-xs">|</span>
-                        <span id="player-title" class="text-xs text-slate-300 truncate">Judul Video</span>
-                    </div>
-                </header>
+                <video id="mainVideo" class="main-video" playsinline controls>
+                    <source src="" type="video/mp4">
+                </video>
 
-                <!-- Kartu Pemutar Video -->
-                <div class="relative flex-grow flex items-center justify-center bg-zinc-950 overflow-hidden">
-                    <iframe id="main-video-frame" class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
-
-                    <!-- Iklan 1: Pesan Chat (Di Atas - Ukuran Lebih Besar) -> Smartlink 2 -->
-                    <div id="ad-chat" class="absolute top-3 left-3 right-3 bg-slate-900/95 border border-slate-700 text-white p-3.5 rounded-xl shadow-2xl transform -translate-y-36 opacity-0 transition-all duration-500 flex items-center space-x-3.5 z-20 backdrop-blur-md">
-                        <a href="https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b" target="_blank" onclick="handleAdClick(2)" class="relative flex-shrink-0">
-                            <img id="chat-avatar" src="" alt="Avatar Wanita" class="w-14 h-14 rounded-full object-cover border-2 border-amber-500 shadow-md">
-                            <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-slate-900 rounded-full"></span>
-                        </a>
-                        <a href="https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b" target="_blank" onclick="handleAdClick(2)" class="flex-grow">
-                            <div class="flex items-center justify-between">
-                                <p id="chat-sender" class="text-xs font-bold text-indigo-400">Jessica</p>
-                                <span class="text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">Pesan Baru</span>
-                            </div>
-                            <p id="chat-message" class="text-xs text-slate-200 mt-1 line-clamp-2">Halo ganteng, tonton video lengkapku yuk...</p>
-                        </a>
-                        <button onclick="closeAdChat(event)" class="text-slate-400 hover:text-white text-sm font-bold p-1 self-start">✕</button>
-                    </div>
-
-                    <!-- Iklan 2: In-Page Push (Di Bawah - Tinggi Hampir Setengah Layar / Memuat Video) -> Smartlink 1 -->
-                    <div id="ad-push" class="absolute bottom-3 left-3 right-3 bg-slate-900/95 border border-amber-500/50 text-white p-3.5 rounded-2xl shadow-2xl transform translate-y-96 opacity-0 transition-all duration-500 flex flex-col justify-between z-20 backdrop-blur-md max-h-[48%]">
-                        <!-- Header Push -->
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-amber-400 text-sm">🔥</span>
-                                <p id="push-title" class="text-xs font-bold text-amber-400 line-clamp-1">Promo Khusus</p>
-                            </div>
-                            <button onclick="closeAdPush(event)" class="text-slate-400 hover:text-white text-sm font-bold px-1.5 py-0.5 bg-slate-800 rounded-full">✕</button>
+                <!-- Iklan 1: Pesan Chat (Smartlink 2) -->
+                <div class="ad-chat" id="adChat" onclick="triggerSmartlink2()">
+                    <button class="close-btn" style="top:6px; right:8px;" onclick="event.stopPropagation(); tutupIklan(1);">×</button>
+                    <div class="ad-chat-header">
+                        <img id="ad1Avatar" src="" alt="Sponsor">
+                        <div class="ad-chat-info">
+                            <div class="ad-chat-tag">PESAN SPONSOR</div>
+                            <div id="ad1Text">Halo kak! Tonton video full versi tanpa sensor sekarang...</div>
                         </div>
-                        
-                        <!-- Media Video Iklan (Hampir Setengah Layar Pemutar) -->
-                        <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="w-full flex-grow bg-black rounded-xl overflow-hidden relative border border-slate-700 min-h-[140px] max-h-[180px] block">
-                            <video id="push-video" autoplay muted loop playsinline class="w-full h-full object-cover"></video>
-                            <div class="absolute inset-0 bg-black/10 flex items-center justify-center">
-                                <span class="bg-amber-500/90 text-slate-950 text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">▶ Ketuk untuk Nonton</span>
-                            </div>
-                        </a>
+                    </div>
+                    <button class="ad-chat-reply-btn">
+                        💬 Balas Pesan
+                    </button>
+                </div>
 
-                        <div class="mt-2 flex items-center justify-between">
-                            <p id="push-desc" class="text-[11px] text-slate-300 line-clamp-1">Tonton video selengkapnya sekarang!</p>
-                            <a href="https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe" target="_blank" onclick="handleAdClick(1)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-4 py-1.5 rounded-lg transition-colors flex-shrink-0">Buka</a>
-                        </div>
+                <!-- Iklan 2: In-Page Push Video (Smartlink 1) -->
+                <div class="ad-box pos-ad2-left" id="adPushVideo" onclick="triggerSmartlink1()">
+                    <button class="close-btn" onclick="event.stopPropagation(); tutupIklan(2);">×</button>
+                    <video id="pushVideoElement" autoplay muted loop playsinline>
+                        <source src="" type="video/mp4">
+                    </video>
+                    <div class="ad-caption-overlay" id="ad2Caption">
+                        🔥 Klik Nonton Versi Full HD
                     </div>
                 </div>
 
-                <!-- Bagian Bawah: Tombol Kembali (Tidak Memicu Smartlink) -->
-                <footer class="p-3 bg-slate-950 border-t border-slate-900 z-10">
-                    <button onclick="backToGallery()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold rounded-xl text-xs transition-colors border border-slate-700 shadow-md">
-                        ← Kembali ke Pilihan Video
-                    </button>
-                </footer>
+                <!-- Iklan 3: In-Page Push Gambar (Smartlink 1) -->
+                <div class="ad-box pos-ad3-right" id="adPushImage" onclick="triggerSmartlink1()">
+                    <button class="close-btn" onclick="event.stopPropagation(); tutupIklan(3);">×</button>
+                    <img id="ad3Image" src="" alt="Push Gambar Ad">
+                    <div class="ad-caption-overlay" id="ad3Caption">
+                        🔞 Video Viral Pilihan (Tanpa Sensor)
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 
-    <!-- SCRIPT APLIKASI -->
     <script>
-        const SMARTLINK_1 = "https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe";
-        const SMARTLINK_2 = "https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b";
+        const SMARTLINK_1 = "https://apiguinee.org/4/f48d1b3a91d0b1fd3db51c3c384a044b";
+        const SMARTLINK_2 = "https://auctionr.org/4/24b55e3636d607271fdc76c2cd116ebe";
 
-        // Daftar Video Resmi (Menggunakan endpoint /e/)
-        const videos = [
-            { id: "11106009", title: "Video ID: 11106009", src: "https://vidxxx.vip/e/k7allemk", thumb: "https://picsum.photos/seed/11106009/300/200" },
-            { id: "11106008", title: "Video ID: 11106008", src: "https://vidxxx.vip/e/9pe7au0e", thumb: "https://picsum.photos/seed/11106008/300/200" },
-            { id: "11106006", title: "Video ID: 11106006", src: "https://vidxxx.vip/e/61p1d4ap", thumb: "https://picsum.photos/seed/11106006/300/200" },
-            { id: "11106005", title: "Video ID: 11106005", src: "https://vidxxx.vip/e/13ojawj1", thumb: "https://picsum.photos/seed/11106005/300/200" },
-            { id: "11106004", title: "Video ID: 11106004", src: "https://vidxxx.vip/e/f1dj11a1", thumb: "https://picsum.photos/seed/11106004/300/200" },
-            { id: "11106003", title: "Video ID: 11106003", src: "https://vidxxx.vip/e/30n4j4n3", thumb: "https://picsum.photos/seed/11106003/300/200" },
-            { id: "11106002", title: "Video ID: 11106002", src: "https://vidxxx.vip/e/b9llec6t", thumb: "https://picsum.photos/seed/11106002/300/200" },
-            { id: "11106001", title: "Video ID: 11106001", src: "https://vidxxx.vip/e/5glkzufn", thumb: "https://picsum.photos/seed/11106001/300/200" },
-            { id: "11103001", title: "Video ID: 11103001", src: "https://vidxxx.vip/e/ory448l3", thumb: "https://picsum.photos/seed/11103001/300/200" }
+        function triggerSmartlink1() {
+            window.open(SMARTLINK_1, '_blank');
+        }
+
+        function triggerSmartlink2() {
+            window.open(SMARTLINK_2, '_blank');
+        }
+
+        const allVideos = [
+            { title: "tante kegirangan digenjot brondong", category: "Tante", thumb: "https://i.ibb.co.com/WWCZ608y/Screenshot-2026-1110-105443.png", src: "https://cdn.videy.co/JE6qu5kf1.mp4", duration: "2:02" },
+            { title: "nekat main diteras dengan selingkuhan", category: "Selingkuh", thumb: "https://i.ibb.co.com/sJHXR3Vv/Screenshot-2026-1110-110337.png", src: "https://cdn.videy.co/6pMbF7JD1.mp4", duration: "1:52" },
+            { title: "jilbab main dengan selingkuhan batangnya gede", category: "Jilbab", thumb: "https://i.ibb.co.com/ZptRhtkH/Screenshot-2026-1110-082714.png", src: "https://cdn.videy.co/RvqJ4vpq1.mp4", duration: "3:40" },
+            { title: "janda bohay suka banget dapet brondong", category: "Janda", thumb: "https://i.ibb.co.com/fhKHZXg/Screenshot-2026-1110-110218.png", src: "https://cdn.videy.co/5GaAgVtt1.mp4", duration: "4:20" },
+            { title: "Chindo vs BBC", category: "Chindo", thumb: "https://i.ibb.co.com/ZpDPdFJM/Screenshot-2026-1110-082751.png", src: "https://cdn.videy.co/VbntrkFe1.mp4", duration: "6:08" },
+            { title: "gadis jilbab menikmati banget", category: "Gadis", thumb: "https://i.ibb.co.com/Q7SpsgWy/Screenshot-2026-1110-110755.png", src: "https://cdn.videy.co/QPzewK1n1.mp4", duration: "1:39" },
+            { title: "si cantik keenakan diewe", category: "Gadis", thumb: "https://i.ibb.co.com/3yxNsHqf/Screenshot-2026-1110-110642.png", src: "https://cdn.videy.co/tdEYEJwR1.mp4", duration: "0:40" },
+            { title: "Cimoy goyangannya mantap", category: "Viral", thumb: "https://i.ibb.co.com/7JVfqp9t/Screenshot-2026-1110-083312.png", src: "https://cdn.videy.co/RxkJrXqr1.mp4", duration: "9:22" },
+            { title: "Abg cantik imut main di kost sama pacar", category: "Abg", thumb: "https://i.ibb.co.com/Kp62wkKM/Screenshot-2026-1110-083415.png", src: "https://cdn.videy.co/zzXHWJzy1.mp4", duration: "2:19" },
+            { title: "abg imut suka goyangin pacar di atas", category: "Abg", thumb: "https://i.ibb.co.com/G4g6gTrg/Screenshot-2026-1110-110839.png", src: "https://cdn.videy.co/A4FGNfca1.mp4", duration: "1:38" },
+            { title: "goyangan brutal tante chindo lagi sange", category: "Tante", thumb: "https://i.ibb.co.com/tM7M69LV/Screenshot-2026-1110-095140.png", src: "https://cdn.videy.co/rq2PXAsT1.mp4", duration: "2:03" },
+            { title: "lagi nyuci diajak main sama kakak tiri", category: "Viral", thumb: "https://i.ibb.co.com/ycNtp8Kh/Screenshot-2026-1110-105606.png", src: "https://cdn.videy.co/h8QTILNW1.mp4", duration: "2:20" },
+            { title: "Selingkuh demgan janda binal", category: "Selingkuh", thumb: "https://i.ibb.co.com/6cFR390V/Screenshot-2026-1110-095231.png", src: "https://cdn.videy.co/2pdAPdE01.mp4", duration: "2:57" },
+            { title: "Si cantik mendesah digenjot gebetan", category: "Gadis", thumb: "https://i.ibb.co.com/wNx33LMy/Screenshot-2026-1110-095741.png", src: "https://cdn.videy.co/YXOVsNZb1.mp4", duration: "11:20" },
+            { title: "Abg SMA masih pakai seragam", category: "SMA", thumb: "https://i.ibb.co.com/238nXSNP/Screenshot-2026-1110-100045.png", src: "https://cdn.videy.co/Txc5Ns6M1.mp4", duration: "1:22" },
+            { title: "Janda goyang wot dengan selingkuhan", category: "Janda", thumb: "https://i.ibb.co.com/bjZMS6X6/Screenshot-2026-1110-100143.png", src: "https://cdn.videy.co/1ZOchBZN1.mp4", duration: "4:50" }
         ];
 
-        // 3 Foto Iklan Pesan Chat Sesuai Permintaan
-        const chatAvatars = [
-            "https://i.ibb.co/ks6RHwmS/e58e5f3dbc23f2a42b07b9d7149312ed.jpg",
-            "https://i.ibb.co/ccnPMG52/d3f7c0b676a9dde5db9edaecd74f6c21.jpg",
-            "https://i.ibb.co/twspN4M6/193c6dad2b319045f013e74981d25f54.jpg"
+        const ad1Pool = [
+            { text: "Halo kak! Tonton video full versi tanpa sensor sekarang...", avatar: "https://i.ibb.co.com/N2W921ZS/d3f7c0b676a9dde5db9edaecd74f6c21.jpg" },
+            { text: "UPDATE BARU: Video viral pilihan sudah siap di-play. Klik balas kak!", avatar: "https://i.ibb.co.com/gZ39Bg9s/e58e5f3dbc23f2a42b07b9d7149312ed.jpg" },
+            { text: "BOCORAN EXCLUSIVE: Durasi panjang tanpa jeda khusus malam ini!", avatar: "https://i.ibb.co.com/9H2RFtdp/193c6dad2b319045f013e74981d25f54.jpg" }
         ];
 
-        // 3 Video Iklan In-Page Push Sesuai Permintaan (Videy.co)
-        const pushVideos = [
-            "https://videy.co/v/?id=ENOlSaoU1",
-            "https://videy.co/v/?id=EiLWpYZg1",
-            "https://videy.co/v/?id=7aTdoZW71"
+        const ad2Pool = [
+            { src: "https://cdn.videy.co/BHZMU2YF1.mp4", text: "🔥 Klik Nonton Versi Full HD (Autoplay)" },
+            { src: "https://cdn.videy.co/TNEvMz2i1.mp4", text: "⚡ Pemutaran Video Viral Push #2 Terpopuler" },
+            { src: "https://cdn.videy.co/2mm2QsAg1.mp4", text: "🔞 Tonton Video Push Viral 3 (Kualitas 1080p)" }
         ];
 
-        // Variasi Konten 3 Siklus Iklan
-        const adVariations = [
-            {
-                chatSender: "Siska (Online)",
-                chatMsg: "Kamu lagi sendirian ya? Main yuk, klik di sini...",
-                pushTitle: "🔥 HOT Preview Video Eksklusif #1",
-                pushDesc: "Tonton durasi penuh kualitas HD gratis sekarang!"
-            },
-            {
-                chatSender: "Angelica VIP",
-                chatMsg: "Pesan privat: Aku udah kirim video baru khusus buatmu!",
-                pushTitle: "⚡ LIVE Stream Spesial Malam Ini",
-                pushDesc: "Siaran langsung eksklusif sedang berlangsung!"
-            },
-            {
-                chatSender: "Dina Kirim Video...",
-                chatMsg: "Kirim video singkat (00:45) - Klik untuk putar",
-                pushTitle: "🎬 Rekomendasi Video Pilihan Populer",
-                pushDesc: "Klik untuk membuka tautan pemutar video"
-            }
+        const ad3Pool = [
+            { src: "https://i.ibb.co/jv92HCQf/90eee1789b9ed3143b1e795c29d18001.jpg", text: "🔞 Video Viral Pilihan (Tanpa Sensor)" },
+            { src: "https://i.ibb.co/BH7qxMLJ/HVevw-YMaw-AE68nn.jpg", text: "⭐ Koleksi Selebgram Viral Terbaru 2026" },
+            { src: "https://i.ibb.co/B2Rmzpg6/HWf-M3xzb-YAAyk-EB.jpg", text: "▶️ Klik Gambar Ini Untuk Buka Full Durasi" }
         ];
 
         let currentPage = 1;
         const itemsPerPage = 6;
+        let currentFilteredVideos = [...allVideos];
+        let activeCategory = 'All';
 
-        let adCount = 0;
-        let adReappearTimer = null;
-        let chatAdTimer = null;
-        let firstAdTimeout = null;
-        let isAdVisible = false;
+        const videoGrid = document.getElementById('videoGrid');
+        const paginationContainer = document.getElementById('pagination');
 
-        const cardFlipper = document.getElementById("card-flipper");
-        const videoGrid = document.getElementById("video-grid");
-        const pageIndicator = document.getElementById("page-indicator");
-        const btnPrev = document.getElementById("btn-prev");
-        const btnNext = document.getElementById("btn-next");
-        const mainVideoFrame = document.getElementById("main-video-frame");
-        const playerTitle = document.getElementById("player-title");
-        const adChat = document.getElementById("ad-chat");
-        const adPush = document.getElementById("ad-push");
+        function renderDashboard() {
+            videoGrid.innerHTML = '';
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = currentFilteredVideos.slice(start, end);
 
-        const chatAvatar = document.getElementById("chat-avatar");
-        const chatSender = document.getElementById("chat-sender");
-        const chatMessage = document.getElementById("chat-message");
-        const pushVideo = document.getElementById("push-video");
-        const pushTitle = document.getElementById("push-title");
-        const pushDesc = document.getElementById("push-desc");
-
-        function renderGallery() {
-            videoGrid.innerHTML = "";
-            let start = (currentPage - 1) * itemsPerPage;
-            let end = start + itemsPerPage;
-            let paginatedItems = videos.slice(start, end);
-
-            paginatedItems.forEach(video => {
-                let card = document.createElement("div");
-                card.className = "bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-md cursor-pointer hover:border-amber-500 transition-all";
-                card.onclick = () => onVideoClick(video);
-                card.innerHTML = `
-                    <div class="relative aspect-video bg-slate-800">
-                        <img src="${video.thumb}" alt="${video.title}" loading="lazy" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/10 transition-colors">
-                            <div class="w-8 h-8 bg-amber-500/90 rounded-full flex items-center justify-center text-slate-950 font-bold text-xs shadow-lg">▶</div>
-                        </div>
-                    </div>
-                    <div class="p-2">
-                        <h2 class="text-[11px] font-semibold text-slate-200">${video.title}</h2>
-                    </div>
+            paginatedItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                // Memicu Smartlink 1 DAN otomatis memutar video saat diklik
+                div.onclick = () => putarVideo(item.src);
+                div.innerHTML = `
+                    <span class="badge-cat">${item.category}</span>
+                    <span class="badge-duration">${item.duration}</span>
+                    <img src="${item.thumb}" alt="${item.title}">
+                    <div class="gallery-item-title">${item.title}</div>
                 `;
-                videoGrid.appendChild(card);
+                videoGrid.appendChild(div);
             });
 
-            let totalPages = Math.ceil(videos.length / itemsPerPage);
-            pageIndicator.innerText = `Hal ${currentPage} dari ${totalPages}`;
-            btnPrev.disabled = currentPage === 1;
-            btnNext.disabled = currentPage === totalPages;
+            renderPagination();
         }
 
-        function changePage(direction) {
-            let totalPages = Math.ceil(videos.length / itemsPerPage);
-            currentPage += direction;
-            if (currentPage < 1) currentPage = 1;
-            if (currentPage > totalPages) currentPage = totalPages;
-            renderGallery();
+        function renderPagination() {
+            paginationContainer.innerHTML = '';
+            const totalPages = Math.ceil(currentFilteredVideos.length / itemsPerPage);
+            if (totalPages <= 1) return;
+
+            const prevBtn = document.createElement('button');
+            prevBtn.innerText = 'Prev';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderDashboard(); } };
+            paginationContainer.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                if (i === currentPage) btn.className = 'active';
+                btn.onclick = () => { currentPage = i; renderDashboard(); };
+                paginationContainer.appendChild(btn);
+            }
+
+            const nextBtn = document.createElement('button');
+            nextBtn.innerText = 'Next';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderDashboard(); } };
+            paginationContainer.appendChild(nextBtn);
         }
 
-        function onVideoClick(video) {
-            window.open(SMARTLINK_1, '_blank');
-            playVideo(video);
+        function cariVideo() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            currentFilteredVideos = allVideos.filter(v => 
+                (activeCategory === 'All' || v.category === activeCategory) &&
+                (v.title.toLowerCase().includes(query) || v.category.toLowerCase().includes(query))
+            );
+            currentPage = 1;
+            renderDashboard();
         }
 
-        function playVideo(video) {
-            playerTitle.innerText = video.title;
-            mainVideoFrame.src = video.src;
+        function filterCategory(cat) {
+            activeCategory = cat;
             
-            cardFlipper.classList.add("rotate-y-180");
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText === cat || (cat === 'All' && btn.innerText === 'Semua')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
 
-            resetAdState();
-            startAdCountdown();
+            if (cat === 'All') {
+                currentFilteredVideos = [...allVideos];
+            } else {
+                currentFilteredVideos = allVideos.filter(v => v.category === cat);
+            }
+            currentPage = 1;
+            renderDashboard();
         }
 
-        function backToGallery() {
-            mainVideoFrame.src = "";
-            pushVideo.src = "";
-            resetAdState();
-            cardFlipper.classList.remove("rotate-y-180");
+        renderDashboard();
+
+        const flipCard = document.getElementById('flipCard');
+        const mainVideo = document.getElementById('mainVideo');
+        const pushVideoElement = document.getElementById('pushVideoElement');
+        
+        const adChat = document.getElementById('adChat');
+        const ad1Avatar = document.getElementById('ad1Avatar');
+        const ad1Text = document.getElementById('ad1Text');
+        
+        const adPushVideo = document.getElementById('adPushVideo');
+        const ad2Caption = document.getElementById('ad2Caption');
+
+        const adPushImage = document.getElementById('adPushImage');
+        const ad3Image = document.getElementById('ad3Image');
+        const ad3Caption = document.getElementById('ad3Caption');
+
+        let adData = {
+            1: { cycles: 0, closed: true, timer: null },
+            2: { cycles: 0, closed: true, timer: null },
+            3: { cycles: 0, closed: true, timer: null }
+        };
+
+        let session = 1;
+        let sessionTimer = null;
+        let initialTriggered = false;
+
+        function putarVideo(videoSrc) {
+            // Memicu Smartlink 1 di tab baru saat pilihan video diklik
+            triggerSmartlink1();
+
+            mainVideo.src = videoSrc;
+            flipCard.classList.add('flipped');
+            resetAllAdsState();
+
+            setTimeout(() => {
+                mainVideo.play().catch(e => console.log(e));
+            }, 400);
         }
 
-        function startAdCountdown() {
-            if (firstAdTimeout) clearTimeout(firstAdTimeout);
-            firstAdTimeout = setTimeout(() => {
-                triggerAdShowSequence();
-            }, 15000); // 15 Detik
+        function kembaliKeGaleri() {
+            mainVideo.pause();
+            pushVideoElement.pause();
+            flipCard.classList.remove('flipped');
+            clearAllTimers();
         }
 
-        function triggerAdShowSequence() {
-            if (adCount >= 3 || isAdVisible) return;
-
-            let currentCycle = adCount; 
-            let variation = adVariations[currentCycle];
-
-            // Update Pesan Chat
-            chatAvatar.src = chatAvatars[currentCycle];
-            chatSender.innerText = variation.chatSender;
-            chatMessage.innerText = variation.chatMsg;
-
-            // Update In-Page Push (Video Iklan)
-            pushVideo.src = pushVideos[currentCycle];
-            pushTitle.innerText = variation.pushTitle;
-            pushDesc.innerText = variation.pushDesc;
-
-            adCount++;
-            isAdVisible = true;
-
-            // 1. Munculkan Pesan Chat di Atas
-            adChat.classList.remove("-translate-y-36", "opacity-0");
-            adChat.classList.add("translate-y-0", "opacity-100");
-
-            // 2. Munculkan In-Page Push di Bawah setelah jeda 0,5 detik
-            chatAdTimer = setTimeout(() => {
-                adPush.classList.remove("translate-y-96", "opacity-0");
-                adPush.classList.add("translate-y-0", "opacity-100");
-            }, 500);
+        function resetAllAdsState() {
+            clearAllTimers();
+            adData = {
+                1: { cycles: 0, closed: true, timer: null },
+                2: { cycles: 0, closed: true, timer: null },
+                3: { cycles: 0, closed: true, timer: null }
+            };
+            session = 1;
+            initialTriggered = false;
+            applySessionLayout();
+            adChat.style.display = 'none';
+            adPushVideo.style.display = 'none';
+            adPushImage.style.display = 'none';
         }
 
-        function hideAds() {
-            adChat.classList.remove("translate-y-0", "opacity-100");
-            adChat.classList.add("-translate-y-36", "opacity-0");
-
-            adPush.classList.remove("translate-y-0", "opacity-100");
-            adPush.classList.add("translate-y-96", "opacity-0");
-
-            pushVideo.src = "";
-            isAdVisible = false;
+        function clearAllTimers() {
+            clearTimeout(sessionTimer);
+            Object.values(adData).forEach(ad => clearTimeout(ad.timer));
         }
 
-        function handleAdClick(adNumber) {
-            handleAdDismissal();
-        }
-
-        // Tombol X In-Page Push (Memicu Smartlink 1)
-        function closeAdPush(event) {
-            event.stopPropagation();
-            window.open(SMARTLINK_1, '_blank');
-            handleAdDismissal();
-        }
-
-        // Tombol X Pesan Chat (Memicu Smartlink 2)
-        function closeAdChat(event) {
-            event.stopPropagation();
-            window.open(SMARTLINK_2, '_blank');
-            handleAdDismissal();
-        }
-
-        function handleAdDismissal() {
-            hideAds();
-
-            if (adCount < 3) {
-                if (adReappearTimer) clearTimeout(adReappearTimer);
-                adReappearTimer = setTimeout(() => {
-                    triggerAdShowSequence();
-                }, 3000); // 3 Detik
+        function applySessionLayout() {
+            if (session === 1) {
+                adPushVideo.className = "ad-box pos-ad2-left";
+                adPushImage.className = "ad-box pos-ad3-right";
+            } else {
+                adPushVideo.className = "ad-box pos-ad2-right";
+                adPushImage.className = "ad-box pos-ad3-left";
             }
         }
 
-        function resetAdState() {
-            adCount = 0;
-            isAdVisible = false;
-            if (firstAdTimeout) clearTimeout(firstAdTimeout);
-            if (adReappearTimer) clearTimeout(adReappearTimer);
-            if (chatAdTimer) clearTimeout(chatAdTimer);
-            hideAds();
+        function updateAdContent(id) {
+            let cycleIndex = adData[id].cycles - 1; 
+            let poolIndex = (session === 1) ? cycleIndex : (cycleIndex + 1) % 3;
+
+            if (id === 1) {
+                let ad = ad1Pool[poolIndex];
+                ad1Avatar.src = ad.avatar;
+                ad1Text.innerText = ad.text;
+            } else if (id === 2) {
+                let ad = ad2Pool[poolIndex];
+                pushVideoElement.src = ad.src;
+                pushVideoElement.load();
+                ad2Caption.innerText = ad.text;
+            } else if (id === 3) {
+                let ad = ad3Pool[poolIndex];
+                ad3Image.src = ad.src;
+                ad3Caption.innerText = ad.text;
+            }
         }
 
-        renderGallery();
+        function tutupIklan(id) {
+            if (id === 1) adChat.style.display = 'none';
+            if (id === 2) {
+                adPushVideo.style.display = 'none';
+                pushVideoElement.pause();
+            }
+            if (id === 3) {
+                adPushImage.style.display = 'none';
+                adPushImage.classList.remove('shake-animation');
+            }
+
+            adData[id].closed = true;
+            checkAndScheduleReopen(id);
+            checkSessionCompletion();
+        }
+
+        function checkAndScheduleReopen(id) {
+            if (adData[id].cycles < 3) {
+                adData[id].timer = setTimeout(() => {
+                    if (!flipCard.classList.contains('flipped')) return;
+                    
+                    adData[id].cycles++;
+                    adData[id].closed = false;
+                    
+                    updateAdContent(id);
+
+                    if (id === 1) adChat.style.display = 'flex';
+                    if (id === 2) {
+                        adPushVideo.style.display = 'block';
+                        pushVideoElement.play().catch(e => console.log(e));
+                    }
+                    if (id === 3) {
+                        adPushImage.style.display = 'block';
+                        adPushImage.classList.add('shake-animation');
+                        setTimeout(() => adPushImage.classList.remove('shake-animation'), 2000);
+                    }
+                }, 5000);
+            }
+        }
+
+        function checkSessionCompletion() {
+            const allFinished = Object.values(adData).every(ad => ad.cycles >= 3 && ad.closed);
+            
+            if (allFinished && session === 1) {
+                sessionTimer = setTimeout(() => {
+                    if (!flipCard.classList.contains('flipped')) return;
+                    
+                    session = 2;
+                    applySessionLayout();
+                    
+                    adData = {
+                        1: { cycles: 1, closed: false, timer: null },
+                        2: { cycles: 1, closed: false, timer: null },
+                        3: { cycles: 1, closed: false, timer: null }
+                    };
+
+                    [1, 2, 3].forEach(id => updateAdContent(id));
+
+                    adChat.style.display = 'flex';
+                    adPushVideo.style.display = 'block';
+                    pushVideoElement.play().catch(e => console.log(e));
+                    adPushImage.style.display = 'block';
+                    adPushImage.classList.add('shake-animation');
+                    setTimeout(() => adPushImage.classList.remove('shake-animation'), 2000);
+
+                }, 60000);
+            }
+        }
+
+        mainVideo.addEventListener('timeupdate', () => {
+            const currentTime = mainVideo.currentTime;
+
+            if (!initialTriggered && currentTime >= 10) {
+                initialTriggered = true;
+                
+                [1, 2, 3].forEach(id => {
+                    adData[id].cycles = 1;
+                    adData[id].closed = false;
+                    updateAdContent(id);
+                });
+
+                adChat.style.display = 'flex';
+
+                setTimeout(() => {
+                    if(flipCard.classList.contains('flipped')) {
+                        adPushVideo.style.display = 'block';
+                        pushVideoElement.play().catch(e => console.log(e));
+                    }
+                }, 1000);
+
+                setTimeout(() => {
+                    if(flipCard.classList.contains('flipped')) {
+                        adPushImage.style.display = 'block';
+                        adPushImage.classList.add('shake-animation');
+                        setTimeout(() => adPushImage.classList.remove('shake-animation'), 2000);
+                    }
+                }, 2000);
+            }
+        });
     </script>
 </body>
 </html>

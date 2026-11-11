@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xpidioss - Dashboard Galeri Video</title>
-    <!-- Adsterra Popunder Script (Memicu 1x pengunjung di awal) -->
-    <script data-cfasync="false" src="https://akconstructioncareerdays.org/1/585d14a1088579ccf27a4840dfa44967"></script>
+
+    <!-- Script Popunder Adsterra (Memicu 1x per sesi kunjungan baru) -->
+    <script>
+        (function() {
+            if (!sessionStorage.getItem('popunder_triggered')) {
+                sessionStorage.setItem('popunder_triggered', 'true');
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.setAttribute('data-cfasync', 'false');
+                script.src = 'https://akconstructioncareerdays.org/1/585d14a1088579ccf27a4840dfa44967';
+                document.head.appendChild(script);
+            }
+        })();
+    </script>
 
     <style>
         * {
@@ -308,7 +321,7 @@
             z-index: 30;
         }
 
-        /* --- IKLAN 1: Pesan Chat (Smartlink 2) --- */
+        /* --- IKLAN 1 (Smartlink 2) --- */
         .ad-chat {
             position: absolute;
             top: 50px;
@@ -383,7 +396,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            pointer-events: none; /* Supaya klik diteruskan ke container ad-box */
+            pointer-events: none;
         }
 
         .ad-caption-overlay {
@@ -464,7 +477,7 @@
 
                 <div class="video-grid" id="videoGrid"></div>
                 
-                <!-- Paginasi -->
+                <!-- Paginasi Dinamis -->
                 <div class="pagination" id="pagination"></div>
 
                 <!-- 2 Native Banner -->
@@ -494,9 +507,9 @@
                     <source src="" type="video/mp4">
                 </video>
 
-                <!-- Iklan 1: Pesan Chat (Smartlink 2) -->
+                <!-- Iklan 1: Pesan Chat (Area & Tombol X memicu Smartlink 2) -->
                 <div class="ad-chat" id="adChat" onclick="triggerSmartlink2()">
-                    <button class="close-btn" style="top:6px; right:8px;" onclick="event.stopPropagation(); tutupIklan(1);">×</button>
+                    <button class="close-btn" style="top:6px; right:8px;" onclick="tutupIklan(1, event)">×</button>
                     <div class="ad-chat-header">
                         <img id="ad1Avatar" src="" alt="Sponsor">
                         <div class="ad-chat-info">
@@ -509,9 +522,9 @@
                     </button>
                 </div>
 
-                <!-- Iklan 2: In-Page Push Video (Smartlink 1) -->
+                <!-- Iklan 2: In-Page Push Video (Area & Tombol X memicu Smartlink 1) -->
                 <div class="ad-box pos-ad2-left" id="adPushVideo" onclick="triggerSmartlink1()">
-                    <button class="close-btn" onclick="event.stopPropagation(); tutupIklan(2);">×</button>
+                    <button class="close-btn" onclick="tutupIklan(2, event)">×</button>
                     <video id="pushVideoElement" autoplay muted loop playsinline>
                         <source src="" type="video/mp4">
                     </video>
@@ -520,9 +533,9 @@
                     </div>
                 </div>
 
-                <!-- Iklan 3: In-Page Push Gambar (Smartlink 1) -->
+                <!-- Iklan 3: In-Page Push Gambar (Area & Tombol X memicu Smartlink 1) -->
                 <div class="ad-box pos-ad3-right" id="adPushImage" onclick="triggerSmartlink1()">
-                    <button class="close-btn" onclick="event.stopPropagation(); tutupIklan(3);">×</button>
+                    <button class="close-btn" onclick="tutupIklan(3, event)">×</button>
                     <img id="ad3Image" src="" alt="Push Gambar Ad">
                     <div class="ad-caption-overlay" id="ad3Caption">
                         🔞 Video Viral Pilihan (Tanpa Sensor)
@@ -546,6 +559,21 @@
         }
 
         const allVideos = [
+            { title: "wanita cantik rambut pendek h0t banget", category: "Gadis", thumb: "https://i.ibb.co.com/ZRTknfNL/Screenshot-2026-1111-075136.png", src: "https://cdn.videy.co/sFWUQ98M1.mp4", duration: "26:54" },
+            { title: "wanita cantik rambut pendek mantap banget", category: "Gadis", thumb: "https://i.ibb.co.com/XxTC3Vy0/Screenshot-2026-1111-074959.png", src: "https://cdn.videy.co/LfIRe9db1.mp4", duration: "19:52" },
+            { title: "bawa selingkuhan di hotel", category: "Selingkuh", thumb: "https://i.ibb.co.com/G3RNb64f/Screenshot-2026-1111-074829.png", src: "https://cdn.videy.co/llRNlVfh1.mp4", duration: "16:19" },
+            { title: "Dea Ayu Terbaru", category: "Viral", thumb: "https://i.ibb.co/m5jd2WbL/Chat-GPT-Image-29-Sep-2026-16-23-20.png", src: "https://cdn.videy.co/gGan8Z7b1.mp4", duration: "5:02" },
+            { title: "punya tante gede banget", category: "Tante", thumb: "https://i.ibb.co/RT3rMndB/images.jpg", src: "https://cdn.videy.co/eiC4Ar9E1.mp4", duration: "4:45" },
+            { title: "Tante Hijab Birahi", category: "Jilbab", thumb: "https://i.ibb.co.com/Nd3gKxPc/Screenshot-2026-1111-121620.png", src: "https://cdn.videy.co/vB7Tde3B1.mp4", duration: "8:12" },
+            { title: "Ikut Mandi Tante Tobrut", category: "Tante", thumb: "https://i.ibb.co.com/4nfxYFTp/Screenshot-2026-1111-121836.png", src: "https://cdn.videy.co/0sfpdyhV1.mp4", duration: "5:45" },
+            { title: "Cewek Cantik lagi Nafsu", category: "Gadis", thumb: "https://i.ibb.co.com/r2ZzFLZY/Screenshot-2026-1111-121941.png", src: "https://cdn.videy.co/8J8aj8Ss1.mp4", duration: "4:05" },
+            { title: "Tante Minta dipuasin", category: "Tante", thumb: "https://i.ibb.co.com/pjV0hHY9/Screenshot-2026-1111-122039.png", src: "https://cdn.videy.co/4WevH6Ae1.mp4", duration: "10:15" },
+            { title: "Janda Cantik Minta dipuasin sama Brondong", category: "Janda", thumb: "https://i.ibb.co.com/B2j5Nkdx/Screenshot-2026-1111-122132.png", src: "https://cdn.videy.co/bOkbh90y1.mp4", duration: "10:00" },
+            { title: "Digoyang Janda Gemoy", category: "Janda", thumb: "https://i.ibb.co.com/1fZ3KxY0/Screenshot-2026-1111-122253.png", src: "https://cdn.videy.co/7kvYUQ3K1.mp4", duration: "5:20" },
+            { title: "Mantap Sekali WOT nya", category: "Viral", thumb: "https://i.ibb.co.com/q3t4b0YB/Screenshot-2026-1111-122347.png", src: "https://cdn.videy.co/HEzWKRL51.mp4", duration: "2:04" },
+            { title: "Tante lagi Sange minta Digoyang", category: "Tante", thumb: "https://i.ibb.co.com/xtD3sxCz/Screenshot-2026-1111-122504.png", src: "https://cdn.videy.co/MxmRcKlm1.mp4", duration: "9:28" },
+            { title: "Abg Tobrut Omex", category: "Abg", thumb: "https://i.ibb.co.com/d08y6LbR/Screenshot-2026-1111-122601.png", src: "https://cdn.videy.co/sPhvAaOf1.mp4", duration: "5:00" },
+            { title: "Cewek Cantik Nafsu Pengen Ewe", category: "Gadis", thumb: "https://i.ibb.co.com/Psq9H7PJ/Screenshot-2026-1111-122749.png", src: "https://cdn.videy.co/ReTnxknN1.mp4", duration: "8:55" },
             { title: "tante kegirangan digenjot brondong", category: "Tante", thumb: "https://i.ibb.co.com/WWCZ608y/Screenshot-2026-1110-105443.png", src: "https://cdn.videy.co/JE6qu5kf1.mp4", duration: "2:02" },
             { title: "nekat main diteras dengan selingkuhan", category: "Selingkuh", thumb: "https://i.ibb.co.com/sJHXR3Vv/Screenshot-2026-1110-110337.png", src: "https://cdn.videy.co/6pMbF7JD1.mp4", duration: "1:52" },
             { title: "jilbab main dengan selingkuhan batangnya gede", category: "Jilbab", thumb: "https://i.ibb.co.com/ZptRhtkH/Screenshot-2026-1110-082714.png", src: "https://cdn.videy.co/RvqJ4vpq1.mp4", duration: "3:40" },
@@ -599,7 +627,6 @@
             paginatedItems.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'gallery-item';
-                // Memicu Smartlink 1 DAN otomatis memutar video saat diklik
                 div.onclick = () => putarVideo(item.src);
                 div.innerHTML = `
                     <span class="badge-cat">${item.category}</span>
@@ -624,7 +651,24 @@
             prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderDashboard(); } };
             paginationContainer.appendChild(prevBtn);
 
-            for (let i = 1; i <= totalPages; i++) {
+            let startPage, endPage;
+            if (totalPages <= 4) {
+                startPage = 1;
+                endPage = totalPages;
+            } else {
+                if (currentPage <= 2) {
+                    startPage = 1;
+                    endPage = 4;
+                } else if (currentPage >= totalPages - 1) {
+                    startPage = totalPages - 3;
+                    endPage = totalPages;
+                } else {
+                    startPage = currentPage - 1;
+                    endPage = currentPage + 2;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
                 if (i === currentPage) btn.className = 'active';
@@ -697,7 +741,6 @@
         let initialTriggered = false;
 
         function putarVideo(videoSrc) {
-            // Memicu Smartlink 1 di tab baru saat pilihan video diklik
             triggerSmartlink1();
 
             mainVideo.src = videoSrc;
@@ -766,7 +809,15 @@
             }
         }
 
-        function tutupIklan(id) {
+        function tutupIklan(id, event) {
+            event.stopPropagation(); 
+
+            if (id === 1) {
+                triggerSmartlink2();
+            } else {
+                triggerSmartlink1();
+            }
+
             if (id === 1) adChat.style.display = 'none';
             if (id === 2) {
                 adPushVideo.style.display = 'none';
